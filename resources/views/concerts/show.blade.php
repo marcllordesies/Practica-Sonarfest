@@ -29,5 +29,18 @@
                 <p style="color: #9ca3af; font-style: italic;">Aquest concert no té cap artista assignat.</p>
             @endif
         </div>
+
+        <!-- Secció: Informació del Concert relacionat -->
+        <div style="background: #f9fafb; padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb; margin-top: 20px;">
+            <h3 style="margin-top: 0; color: #374151;">Informació del escenari</h3>
+            @if($concert->escenari)
+                <p><strong>Nom:</strong>
+                        {{ $concert->escenari->nom }}
+                </p>
+                <p><strong>Aforament:</strong> {{ $concert->escenari->aforament_maxim }}</p>
+            @else
+                <p style="color: #9ca3af; font-style: italic;">Aquest concert no té cap escenari assignat.</p>
+            @endif
+        </div>
     </div>
 @endsection

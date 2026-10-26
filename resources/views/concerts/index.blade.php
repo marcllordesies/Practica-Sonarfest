@@ -17,6 +17,7 @@
             <tr style="background-color: #f3f4f6; border-bottom: 2px solid #e5e7eb;">
                 <th style="padding: 12px;">Nom</th>
                 <th style="padding: 12px;">Artista</th>
+                <th style="padding: 12px;">Escenari</th>
                 <th style="padding: 12px;">Data i hora</th>
                 <th style="padding: 12px;">Tipus</th>
                 <th style="padding: 12px;">Durada</th>
@@ -37,6 +38,7 @@
                             <span style="color: #9ca3af; font-style: italic;">Sense artista</span>
                         @endif
                     </td>
+                    <td>{{ $concert->escenari->nom }}</td>
                     <td style="padding: 12px;">{{ $concert->data_hora->format('d/m/Y H:i') }}</td>
                     <td style="padding: 12px;">
                         <!-- Badge de color diferent per a cada valor de l'enum -->

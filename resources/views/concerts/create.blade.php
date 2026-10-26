@@ -25,6 +25,22 @@
                 @enderror
             </p>
 
+            <!-- Desplegable d'Escenaris Actius -->
+            <p>
+                <label style="font-weight: bold;">Escenari:</label><br>
+                <select name="escenari_id" style="width: 100%; padding: 8px; margin-top: 5px;">
+                    <option value="">-- Selecciona un escenari --</option>
+                    @foreach ($escenaris as $escenari)
+                        <option value="{{ $escenari->id }}" {{ old('escenari_id') == $escenari->id ? 'selected' : '' }}>
+                            {{ $escenari->nom }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('escenari_id')
+                <br><span style="color: red; font-size: 0.9em;">{{ $message }}</span>
+                @enderror
+            </p>
+
             <!-- Camp: Nom del Concert -->
             <p>
                 <label style="font-weight: bold;">Nom del concert o gira:</label><br>
