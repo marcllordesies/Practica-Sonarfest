@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('escenaris', function (Blueprint $table) {
             $table->id();
+            $table->string('nom')->unique();
+            $table->unsignedInteger('aforament_maxim');
+            $table->string('ubicacio');
+            $table->boolean('cobert')->default(false);
             $table->timestamps();
         });
     }
