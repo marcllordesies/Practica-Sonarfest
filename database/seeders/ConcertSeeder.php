@@ -16,9 +16,9 @@ class ConcertSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Busquem només els artistes (i escenaris) actius a la base de dades
+        // 1. Busquem només els artistes actius a la base de dades
         $artistesActius = Artista::where('actiu', true)->get();
-        $escenarisActius = Escenari::where('cobert', true)->get();
+        $escenarisActius = Escenari::where('cobert', true, false)->get();
 
         // Si no hi hagués cap artista actiu, ens assegurem que el seeder no falli
         if ($artistesActius->isEmpty()) {
