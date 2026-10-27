@@ -15,6 +15,7 @@
             <tr style="background-color: #f3f4f6; border-bottom: 2px solid #e5e7eb;">
                 <th style="padding: 12px;">Nom</th>
                 <th style="padding: 12px;">País</th>
+                <th style="padding: 12px;">Gèneres</th>
                 <th style="padding: 12px;">Actiu</th>
                 <th style="padding: 12px;">Accions</th>
             </tr>
@@ -24,6 +25,15 @@
                 <tr style="border-bottom: 1px solid #e5e7eb;">
                     <td style="padding: 12px;">{{ $artista->nom }}</td>
                     <td style="padding: 12px;">{{ $artista->pais }}</td>
+                    <td style="padding: 12px;">
+                        @forelse($artista->generes as $genere)
+                            <span style="background-color: #e5e7eb; color: #1f2937; padding: 3px 8px; border-radius: 4px; font-size: 0.85em; font-weight: 500; margin-right: 4px; display: inline-block;">
+                                {{ $genere->nom }}
+                            </span>
+                        @empty
+                            <span style="color: #9ca3af; font-style: italic; font-size: 0.9em;">Sense gènere</span>
+                        @endforelse
+                    </td>
                     <td style="padding: 12px;">
                         @if($artista->actiu)
                             <span style="background-color: #dcfce7; color: #16a34a; padding: 4px 8px; border-radius: 12px; font-size: 0.85em; font-weight: bold;">Actiu</span>

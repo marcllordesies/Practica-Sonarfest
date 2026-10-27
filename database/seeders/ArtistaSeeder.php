@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Artista;
+use App\Models\Genere;
 class ArtistaSeeder extends Seeder
 {
     /**
@@ -76,6 +77,44 @@ class ArtistaSeeder extends Seeder
             'imatge_url' => null,
             'actiu' => true,
         ]);
+
+
+        $pop = Genere::where ('nom','Pop')->first();
+        $rock = Genere::where ('nom','Rock')->first();
+        $electro = Genere::where ('nom','Electrònica')->first();
+        $jazz = Genere::where ('nom','Jazz')->first();
+        $hiphop = Genere::where ('nom','Hip-hop')->first();
+        $indie = Genere::where ('nom','Indie')->first();
+
+        $rosalia = Artista::where('nom','Rosalia')->first();
+        if ($rosalia){
+            $rosalia->generes()->attach([$pop->id, $electro->id]);
+        }
+
+        $badBunny = Artista::where('nom','Bad Bunny')->first();
+        if ($badBunny){
+            $badBunny->generes()->attach([$hiphop->id, $pop->id]);
+        }
+
+        $michaelJackson = Artista::where('nom','Michael Jackson')->first();
+        if ($michaelJackson){
+            $michaelJackson->generes()->attach([$pop->id, $rock->id]);
+        }
+
+        $billieEilish = Artista::where('nom','Billie Eilish')->first();
+        if ($billieEilish){
+            $billieEilish->generes()->attach([$pop->id, $indie->id]);
+        }
+
+        $stromae = Artista::where('nom','Stromae')->first();
+        if ($stromae){
+            $stromae->generes()->attach([$electro->id]);
+        }
+
+        $figaflawas = Artista::where('nom','Figa Flawas')->first();
+        if ($figaflawas){
+            $figaflawas->generes()->attach([$pop->id, $electro->id]);
+        }
 
 
     }

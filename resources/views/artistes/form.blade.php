@@ -37,6 +37,21 @@
                 @error('imatge_url') <br><span style="color: red; font-size: 0.9em;">{{ $message }}</span> @enderror
             </p>
 
+            <!-- SELECCIÓ DE GÈNERES -->
+            <div style="margin-top: 20px;">
+                <label style="font-weight: bold;">Gèneres:</label><br>
+                <div style="margin-top: 8px; display: flex; flex-wrap: wrap; gap: 15px;">
+                    @foreach($generes as $genere)
+                        <label style="cursor: pointer; display: inline-flex; align-items: center; font-weight: normal;">
+                            <input type="checkbox" name="generes[]" value="{{ $genere->id }}" style="margin-right: 6px;"
+                                @checked(isset($artista) && $artista->generes->contains($genere->id))>
+                            {{ $genere->nom }}
+                        </label>
+                    @endforeach
+                </div>
+                @error('generes') <br><span style="color: red; font-size: 0.9em;">{{ $message }}</span> @enderror
+            </div>
+
             <p style="margin-top: 20px;">
                 <input type="hidden" name="actiu" value="0">
                 <label style="cursor: pointer; display: inline-flex; align-items: center;">

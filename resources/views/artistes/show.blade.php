@@ -24,6 +24,17 @@
                     <span style="background-color: #f3f4f6; color: #4b5563; padding: 4px 8px; border-radius: 12px; font-weight: bold;">Inactiu</span>
                 @endif
             </p>
+
+            <!-- GÈNERES DE L'ARTISTA -->
+            <p style="margin-top: 15px;"><strong>Gèneres Musicals:</strong><br>
+                @forelse($artista->generes as $genere)
+                    <span style="background-color: #e5e7eb; color: #1f2937; padding: 3px 8px; border-radius: 4px; font-size: 0.85em; font-weight: 500; margin-right: 4px; margin-top: 5px; display: inline-block;">
+                        {{ $genere->nom }}
+                    </span>
+                @empty
+                    <span style="color: #9ca3af; font-style: italic; font-size: 0.95em;">Aquest artista no té cap gènere assignat.</span>
+                @endforelse
+            </p>
         </div>
 
         <!-- Llista de concerts de l'artista -->
@@ -44,7 +55,7 @@
             @endif
         </div>
 
-        <!-- Enllaços de navegació corregits de forma simplificada -->
+        <!-- Enllaços de navegació -->
         <p style="margin-top: 25px;">
             <a href="{{ route('artistes.index') }}" style="color: #4b5563; text-decoration: underline; margin-right: 20px;">Tornar a la llista</a>
             <a href="{{ route('artistes.edit', $artista) }}" style="background: #d97706; color: white; padding: 8px 15px; text-decoration: none; border-radius: 4px; font-weight: bold;">Editar Artista</a>
