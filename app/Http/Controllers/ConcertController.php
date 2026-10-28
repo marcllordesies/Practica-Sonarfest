@@ -18,7 +18,7 @@ class ConcertController extends Controller
     public function index(): View
     {
         // Carreguem els concerts amb la relació de l'artista inclosa i ordenats per data i hora
-        $concerts = Concert::with('artista')->orderBy('data_hora')->get();
+        $concerts = Concert::with(['artista', 'escenari']);
 
         return view('concerts.index', compact('concerts'));
     }

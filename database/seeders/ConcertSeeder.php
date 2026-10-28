@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Enums\TipusConcert;
 use App\Models\Artista;
 use App\Models\Concert;
+use App\Models\Escenari;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 
@@ -17,10 +18,16 @@ class ConcertSeeder extends Seeder
     {
         // 1. Busquem només els artistes actius a la base de dades
         $artistesActius = Artista::where('actiu', true)->get();
+        $escenarisActius = Escenari::where('cobert', true, false)->get();
 
         // Si no hi hagués cap artista actiu, ens assegurem que el seeder no falli
         if ($artistesActius->isEmpty()) {
             $this->command->warn('No hi ha artistes actius a la base de dades per assignar concerts.');
+            return;
+        }
+
+        if ($escenarisActius->isEmpty()) {
+            $this->command->warn('No hi ha escenaris actius a la base de dades per assignar concerts.');
             return;
         }
 
@@ -44,6 +51,7 @@ class ConcertSeeder extends Seeder
         for ($i = 0; $i < 15; $i++) {
             // Agafem un artista actiu a l'atzar
             $artista = $artistesActius->random();
+            $escenari = $escenarisActius->random();
 
             // Generem una data aleatòria per a l'estiu vinent (entre juliol i agost de 2027)
             $diaAleatori = rand(1, 31);
@@ -55,6 +63,7 @@ class ConcertSeeder extends Seeder
             // Guardem el concert a la base de dades
             Concert::create([
                 'artista_id' => $artista->id,
+                'escenari_id' => $escenari->id,
                 'nom' => $nomsConcerts[$i],
                 'data_hora' => $dataHora,
                 'durada_minuts' => rand(45, 120), // Durada entre 45 minuts i 2 hores
