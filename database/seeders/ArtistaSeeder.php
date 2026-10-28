@@ -84,7 +84,7 @@ class ArtistaSeeder extends Seeder
         $electro = Genere::where ('nom','Electrònica')->first();
         $jazz = Genere::where ('nom','Jazz')->first();
         $hiphop = Genere::where ('nom','Hip-hop')->first();
-        $indie = Genere::where ('nom','Indie')->first();
+        $indie = Genere::firstOrCreate(['nom' => 'Indie']);
 
         $rosalia = Artista::where('nom','Rosalia')->first();
         if ($rosalia){

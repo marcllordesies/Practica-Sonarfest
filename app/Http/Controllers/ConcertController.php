@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Validation\Rules\Enum;
+use App\Models\Escenari;
 
 class ConcertController extends Controller
 {
@@ -18,8 +19,7 @@ class ConcertController extends Controller
     public function index(): View
     {
         // Carreguem els concerts amb la relació de l'artista inclosa i ordenats per data i hora
-        $concerts = Concert::with(['artista', 'escenari']);
-
+        $concerts = Concert::with(['artista', 'escenari'])->get();
         return view('concerts.index', compact('concerts'));
     }
 
@@ -28,11 +28,13 @@ class ConcertController extends Controller
      */
     public function create(): View
     {
-        // Busquem només els artistes actius endreçats pel seu nom
-        $artistes = Artista::where('actiu', true)->orderBy('nom')->get();
 
-        return view('concerts.create', compact('artistes'));
+        $escenaris = Escenari::all();
+        $artistes = Artista::all();
+
+        return view('concerts.create', compact('escenaris', 'artistes'));
     }
+
 
     /**
      * Valida i guarda un concert.
@@ -41,7 +43,8 @@ class ConcertController extends Controller
     {
         // 1. Validem les dades que arriben del formulari amb les regles exactes
         $validated = $request->validate([
-            'artista_id'    => 'required|exists:artistas,id', // Verifica que existeix a la teva taula 'artistas'
+            'artista_id'    => 'required|exists:artistas,id',
+            'escenari_id' => 'required|exists:escenaris,id', // Opció 1: format text habitual
             'nom'           => 'required|string|max:255',
             'data_hora'     => 'required|date',
             'durada_minuts' => 'required|integer|min:15|max:300', // Mínim 15 minuts, màxim 5 hores (300 minuts)

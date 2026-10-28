@@ -34,7 +34,7 @@ class ArtistaController extends Controller
         ]);
 
         $artista = Artista::create($validated);
-        $artista->generes()->sync($request->input('generes')[]);
+        $artista->generes()->sync($request->input('generes'));
 
         return redirect()->route('artistes.index')->with('success', 'Artista creat correctament.');
     }
@@ -68,7 +68,7 @@ class ArtistaController extends Controller
 
         $artista->update($validated);
 
-        $artista->generes()->sync($request->input('generes')[]);
+        $artista->generes()->sync($request->input('generes', []));
 
         return redirect()->route('artistes.index')->with('success', 'Artista actualitzat correctament.');
     }

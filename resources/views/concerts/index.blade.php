@@ -27,9 +27,11 @@
             <tbody>
             @foreach($concerts as $concert)
                 <tr style="border-bottom: 1px solid #e5e7eb;">
+                    {{-- Línia 30: El nom del concert --}}
                     <td style="padding: 12px; font-weight: bold;">{{ $concert->nom }}</td>
+
+                    {{-- Línies 32-41: El bloc de l'artista --}}
                     <td style="padding: 12px;">
-                        <!-- Enllaç al show de l'artista si està assignat -->
                         @if($concert->artista)
                             <a href="{{ route('artistes.show', $concert->artista->id) }}" style="color: #2563eb; text-decoration: underline;">
                                 {{ $concert->artista->nom }}
@@ -38,18 +40,23 @@
                             <span style="color: #9ca3af; font-style: italic;">Sense artista</span>
                         @endif
                     </td>
-                    <td>{{ $concert->escenari->nom }}</td>
-                    <td style="padding: 12px;">{{ $concert->data_hora->format('d/m/Y H:i') }}</td>
+
+                    {{-- Línia 42: L'escenari --}}
+                    <td>{{ $concert->escenari->nom ?? 'Sense escenari' }}</td>
+
+                    {{-- Línia 43: La data --}}
+                    <td style="padding: 12px;">{{ $concert->data_hora?->format('d/m/Y H:i') }}</td>
+
+                    {{-- Línies 45 en davant: El bloc dels enums (Tipus) --}}
                     <td style="padding: 12px;">
-                        <!-- Badge de color diferent per a cada valor de l'enum -->
-                        @if($concert->tipus->value == 'CONCERT')
-                            <span style="background-color: #dcfce7; color: #16a34a; padding: 4px 8px; border-radius: 12px; font-size: 0.85em; font-weight: bold;">CONCERT</span>
-                        @elseif($concert->tipus->value == 'DJ_SET')
-                            <span style="background-color: #e0f2fe; color: #0369a1; padding: 4px 8px; border-radius: 12px; font-size: 0.85em; font-weight: bold;">DJ SET</span>
-                        @elseif($concert->tipus->value == 'SHOWCASE')
-                            <span style="background-color: #fef3c7; color: #b45309; padding: 4px 8px; border-radius: 12px; font-size: 0.85em; font-weight: bold;">SHOWCASE</span>
-                        @elseif($concert->tipus->value == 'ACUSTIC')
-                            <span style="background-color: #f3e8ff; color: #6b21a8; padding: 4px 8px; border-radius: 12px; font-size: 0.85em; font-weight: bold;">ACÚSTIC</span>
+                        @if($concert->tipus->value === 'CONCERT')
+                            <span style="background-color: #dcfce7; color: #16a34a; padding: 4px 8px; border-radius: 12px; font-size: 0.85em;">CONCERT</span>
+                        @elseif($concert->tipus->value === 'DJ SET')
+                            <span style="background-color: #e0f2fe; color: #0369a1; padding: 4px 8px; border-radius: 12px; font-size: 0.85em;">DJ SET</span>
+                        @elseif($concert->tipus->value === 'SHOWCASE')
+                            <span style="background-color: #fef3c7; color: #b45309; padding: 4px 8px; border-radius: 12px; font-size: 0.85em;">SHOWCASE</span>
+                        @elseif($concert->tipus->value === 'ACUSTIC')
+                            <span style="background-color: #f3e8ff; color: #6b21a8; padding: 4px 8px; border-radius: 12px; font-size: 0.85em;">ACÚSTIC</span>
                         @endif
                     </td>
                     <td style="padding: 12px;">{{ $concert->durada_minuts }} minuts</td>
