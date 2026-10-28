@@ -18,5 +18,4 @@ class Escenari extends Model
     {
         return $this->hasMany(Concert::class);
     }
-
 }

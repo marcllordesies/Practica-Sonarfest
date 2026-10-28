@@ -8,9 +8,6 @@ use App\Models\Genere;
 
 class GenereSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         Genere::create(['nom' => 'Pop']);

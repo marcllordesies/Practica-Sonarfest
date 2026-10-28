@@ -12,11 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('concerts', function (Blueprint $table) {
-            // id (bigIncrements, PK)
             $table->id();
-
-            // artista_id (foreignId, not null, FK → artistas.id con cascadeOnDelete)
-            // Hem posat 'artistas' a dins de constrained() perquè coincideixi amb la teva taula real
             $table->foreignId('artista_id')->constrained('artistas')->cascadeOnDelete();
 
             // nom (string, not null)
