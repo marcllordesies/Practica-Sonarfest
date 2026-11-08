@@ -4,68 +4,137 @@ namespace App\Http\Controllers;
 
 use App\Models\Artista;
 use App\Models\Concert;
-use App\Enums\TipusConcert;
+use App\Models\Escenari;
+use App\Models\Genere;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Validation\Rules\Enum;
-use App\Models\Escenari;
 
 class ConcertController extends Controller
 {
-    /**
-     * Llista tots els concerts amb el nom de l'artista.
-     */
-    public function index(): View
+    public function index(Request $request): View
     {
-        // Carreguem els concerts amb la relació de l'artista inclosa i ordenats per data i hora
-        $concerts = Concert::with(['artista', 'escenari'])->get();
-        return view('concerts.index', compact('concerts'));
+        $query = Concert::with(['artista.generes', 'escenari']);
+
+        if ($request->filled('escenari_id')) {
+            $query->where('escenari_id', $request->escenari_id);
+        }
+
+        if ($request->filled('genere_id')) {
+            $query->whereHas('artista.generes', function ($q) use ($request) {
+                $q->where('generes.id', $request->genere_id);
+            });
+        }
+
+        if ($request->filled('data_inici')) {
+            $query->whereDate('data_hora', '>=', $request->data_inici);
+        }
+        if ($request->filled('data_fi')) {
+            $query->whereDate('data_hora', '<=', $request->data_fi);
+        }
+
+        $concerts = $query->orderBy('data_hora')->get();
+        $escenaris = Escenari::all();
+        $generes = Genere::all();
+
+        return view('concerts.index', compact('concerts', 'escenaris', 'generes'));
     }
 
-    /**
-     * Formulari amb desplegable d'artistes actius.
-     */
     public function create(): View
     {
-
-        $escenaris = Escenari::all();
-        $artistes = Artista::all();
+        $escenaris = Escenari::orderBy('nom')->get();
+        $artistes = Artista::where('actiu', true)->orderBy('nom')->get();
 
         return view('concerts.create', compact('escenaris', 'artistes'));
     }
 
-
-    /**
-     * Valida i guarda un concert.
-     */
     public function store(Request $request): RedirectResponse
     {
-        // 1. Validem les dades que arriben del formulari amb les regles exactes
         $validated = $request->validate([
             'artista_id'    => 'required|exists:artistas,id',
-            'escenari_id' => 'required|exists:escenaris,id', // Opció 1: format text habitual
+            'escenari_id'   => 'required|exists:escenaris,id',
             'nom'           => 'required|string|max:255',
             'data_hora'     => 'required|date',
-            'durada_minuts' => 'required|integer|min:15|max:300', // Mínim 15 minuts, màxim 5 hores (300 minuts)
-            'tipus'         => 'required|in:CONCERT,DJ_SET,SHOWCASE,ACUSTIC', // Valida contra els strings de l'enum
+            'durada_minuts' => 'required|integer|min:15|max:300',
+            'tipus'         => 'required|in:CONCERT,DJ_SET,SHOWCASE,ACUSTIC',
         ]);
 
-        // 2. Creem el concert a la base de dades amb els camps ja validats
         Concert::create($validated);
 
-        // 3. Redireccionem a la llista de concerts enviant un missatge d'èxit de sessió
         return redirect()->route('concerts.index')->with('success', 'Concert creat correctament.');
     }
 
-    /**
-     * Detall del concert amb info de l'artista.
-     */
     public function show(Concert $concert): View
     {
-        // Carreguem la relació de l'artista per si de cas no s'ha fet abans
-        $concert->load('artista');
+        $concert->load(['artista', 'escenari']);
 
         return view('concerts.show', compact('concert'));
+    }
+
+    public function edit(Concert $concert): View
+    {
+        $escenaris = Escenari::orderBy('nom')->get();
+        $artistes = Artista::where('actiu', true)->orderBy('nom')->get();
+
+        return view('concerts.edit', compact('concert', 'escenaris', 'artistes'));
+    }
+
+    public function update(Request $request, Concert $concert): RedirectResponse
+    {
+        $validated = $request->validate([
+            'artista_id'    => 'required|exists:artistas,id',
+            'escenari_id'   => 'required|exists:escenaris,id',
+            'nom'           => 'required|string|max:255',
+            'data_hora'     => 'required|date',
+            'durada_minuts' => 'required|integer|min:15|max:300',
+            'tipus'         => 'required|in:CONCERT,DJ_SET,SHOWCASE,ACUSTIC',
+        ]);
+
+        $concert->update($validated);
+
+        return redirect()->route('concerts.index')->with('success', 'Concert actualitzat correctament.');
+    }
+
+    public function destroy(Concert $concert): RedirectResponse
+    {
+        $concert->delete();
+
+        return redirect()->route('concerts.index')->with('success', 'Concert eliminat correctament.');
+    }
+
+    public function estadistiques(): View
+    {
+        $topConcerts = Concert::withCount('entrades')
+            ->orderByDesc('entrades_count')
+            ->take(5)
+            ->get();
+
+        $topArtistes = Artista::withCount('concerts')
+            ->orderByDesc('concerts_count')
+            ->take(5)
+            ->get();
+
+        $recaptacioEscenaris = Escenari::withSum('entrades', 'preu_pagat')->get();
+
+        $generesPopulars = Genere::select('generes.*')
+            ->join('artista_genere', 'generes.id', '=', 'artista_genere.genere_id')
+            ->join('concerts', 'artista_genere.artista_id', '=', 'concerts.artista_id')
+            ->join('entradas', 'concerts.id', '=', 'entradas.concert_id') //
+            ->groupBy('generes.id', 'generes.nom')
+            ->selectRaw('count(entradas.id) as total_entrades') //
+            ->orderByDesc('total_entrades')
+            ->get();
+
+        $ocupacioEscenaris = Escenari::withCount('concerts')
+            ->withCount('entrades')
+            ->get();
+
+        return view('estadistiques.estadistiques', compact(
+            'topConcerts',
+            'topArtistes',
+            'recaptacioEscenaris',
+            'generesPopulars',
+            'ocupacioEscenaris'
+        ));
     }
 }

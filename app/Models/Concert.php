@@ -25,9 +25,6 @@ class Concert extends Model
         'tipus' => TipusConcert::class,
     ];
 
-    /**
-     * Un concert pertany a un artista.
-     */
     public function artista(): BelongsTo
     {
         return $this->belongsTo(Artista::class);
@@ -36,6 +33,11 @@ class Concert extends Model
     public function escenari(): BelongsTo
     {
         return $this->belongsTo(Escenari::class);
+    }
+
+    public function entrades()
+    {
+        return $this->hasMany(Entrada::class);
     }
 
 }

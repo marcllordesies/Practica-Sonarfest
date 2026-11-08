@@ -9,7 +9,7 @@
         <form action="{{ route('concerts.store') }}" method="POST" style="margin-top: 20px;">
             @csrf
 
-            <!-- Desplegable d'Artistes Actius -->
+
             <p>
                 <label style="font-weight: bold;">Artista:</label><br>
                 <select name="artista_id" style="width: 100%; padding: 8px; margin-top: 5px;">
@@ -25,7 +25,7 @@
                 @enderror
             </p>
 
-            <!-- Desplegable d'Escenaris Actius -->
+
             <p>
                 <label style="font-weight: bold;">Escenari:</label><br>
                 <select name="escenari_id" style="width: 100%; padding: 8px; margin-top: 5px;">
@@ -41,7 +41,7 @@
                 @enderror
             </p>
 
-            <!-- Camp: Nom del Concert -->
+
             <p>
                 <label style="font-weight: bold;">Nom del concert o gira:</label><br>
                 <input type="text" name="nom" value="{{ old('nom') }}" style="width: 100%; padding: 8px; margin-top: 5px;">
@@ -50,7 +50,7 @@
                 @enderror
             </p>
 
-            <!-- Camp: Data i Hora -->
+
             <p>
                 <label style="font-weight: bold;">Data i hora:</label><br>
                 <input type="datetime-local" name="data_hora" value="{{ old('data_hora') }}" style="width: 100%; padding: 8px; margin-top: 5px;">
@@ -59,7 +59,7 @@
                 @enderror
             </p>
 
-            <!-- Camp: Durada -->
+
             <p>
                 <label style="font-weight: bold;">Durada (en minuts):</label><br>
                 <input type="number" name="durada_minuts" value="{{ old('durada_minuts') }}" style="width: 100%; padding: 8px; margin-top: 5px;">
@@ -68,7 +68,7 @@
                 @enderror
             </p>
 
-            <!-- Desplegable de Tipus (Enum) -->
+
             <p>
                 <label style="font-weight: bold;">Tipus d'esdeveniment:</label><br>
                 <select name="tipus" style="width: 100%; padding: 8px; margin-top: 5px;">
@@ -84,7 +84,7 @@
                 @enderror
             </p>
 
-            <!-- Botó de Crear -->
+
             <p style="margin-top: 25px;">
                 <button type="submit" style="background: #22c55e; color: white; padding: 10px 20px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">
                     Crear Concert

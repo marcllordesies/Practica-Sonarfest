@@ -7,9 +7,6 @@ use App\Models\Artista;
 use App\Models\Genere;
 class ArtistaSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         //1. Rosalia (Actiu)

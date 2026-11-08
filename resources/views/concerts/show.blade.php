@@ -6,7 +6,7 @@
 
         <a href="{{ route('concerts.index') }}" style="color: #4b5563; text-decoration: underline;">Tornar a la llista</a>
 
-        <!-- Secció: Camps del concert -->
+
         <div style="background: #ffffff; padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb; margin-top: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
             <h2 style="margin-top: 0; color: #1f2937;">{{ $concert->nom }}</h2>
             <p><strong>Data i hora:</strong> {{ $concert->data_hora->format('d/m/Y \a les H:i\h') }}</p>
@@ -14,7 +14,7 @@
             <p><strong>Tipus d'esdeveniment:</strong> {{ $concert->tipus->value }}</p>
         </div>
 
-        <!-- Secció: Informació de l'Artista relacionat -->
+
         <div style="background: #f9fafb; padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb; margin-top: 20px;">
             <h3 style="margin-top: 0; color: #374151;">Informació de l'Artista</h3>
             @if($concert->artista)
@@ -30,17 +30,43 @@
             @endif
         </div>
 
-        <!-- Secció: Informació del Concert relacionat -->
+
         <div style="background: #f9fafb; padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb; margin-top: 20px;">
             <h3 style="margin-top: 0; color: #374151;">Informació del escenari</h3>
             @if($concert->escenari)
                 <p><strong>Nom:</strong>
-                        {{ $concert->escenari->nom }}
+                    {{ $concert->escenari->nom }}
                 </p>
                 <p><strong>Aforament:</strong> {{ $concert->escenari->aforament_maxim }}</p>
             @else
                 <p style="color: #9ca3af; font-style: italic;">Aquest concert no té cap escenari assignat.</p>
             @endif
         </div>
+
+
+        <div style="background: #ffffff; padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb; margin-top: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+            <h3 style="margin-top: 0; color: #374151;">Gestió d'Entrades</h3>
+
+            @php
+                $entradesVenudes = $concert->entrades()->count();
+                $aforamentMaxim = $concert->escenari->aforament_maxim ?? 0;
+                $ple = $entradesVenudes >= $aforamentMaxim;
+            @endphp
+
+            <p style="margin-bottom: 15px;">
+                Entrades venudes: <strong>{{ $entradesVenudes }} / {{ $aforamentMaxim }}</strong>
+            </p>
+
+            @if($ple)
+                <span style="background: #fee2e2; color: #991b1b; padding: 10px 15px; border-radius: 6px; font-weight: bold; display: inline-block;">
+                    🔴 Esgotades (Aforament complet)
+                </span>
+            @else
+                <a href="{{ route('entrades.create', $concert) }}" style="background: #4f46e5; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; display: inline-block;">
+                    🎟️ Comprar Entrada
+                </a>
+            @endif
+        </div>
+
     </div>
 @endsection
